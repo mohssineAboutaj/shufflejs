@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>shufflejs kech</title>
+	<style>
+		.hide {
+			display: none;
+		}
+	</style>
+</head>
+<body>
+	<h3>
+		shuffle	
+	</h3>
+	<div class="shuffle-kech">
+		<ul class="shuffle-controls">
+			<li class="shuffle-control-item" >all</li>
+			<li class="shuffle-control-item" data-btn="art">art</li>
+			<li class="shuffle-control-item" data-btn="design">design</li>
+			<li class="shuffle-control-item" data-btn="coffee">coffee</li>
+		</ul>
+		<div class="shuffle-content">
+			<div class="shuffle-item" data-cat="art">
+				<img src="docs/imgs/person_1.jpg" alt="">
+			</div>
+			<div class="shuffle-item" data-cat="coffee">
+				<img src="docs/imgs/person_2.jpg" alt="">
+			</div>
+			<div class="shuffle-item" data-cat="design">
+				<img src="docs/imgs/person_3.jpg" alt="">
+			</div>
+			<div class="shuffle-item" data-cat="art">
+				<img src="docs/imgs/person_4.jpg" alt="">
+			</div>
+		</div>
+	</div>
+
+<script type="text/javascript">
+
+class Shuffle {
+	shuffleContentClass = '.shuffle-content';
+
+	shuffleControls = '';
+
+	shuffleControlsClass = ".shuffle-controls";
+
+	shuffleControlItem = '';
+
+	shuffleControlItemClass = ".shuffle-control-item";
+
+	shuffleContainer = '';
+
+	shuffleContent = '';
+
+	shuffleContentItem = '';
+
+	shuffleContentItemClass = ".shuffle-item";
+
+	hideClass = "hide";
+
+	propsList = [
+		'content',
+		'controls',
+		'controlItems',
+		'shuffleItems',
+		'hideClass',
+	];
+
+	defaultOptions = {
+		controls: this.shuffleControlsClass,
+		content: this.shuffleContentClass,
+		controlItems: this.shuffleControlItemClass,
+		shuffleItems: this.shuffleContentItemClass,
+		hideClass: this.hideClass,
+	};
+
+	updateOptions(options) {
+		this.propsList.forEach((prop) => {
+			this.defaultOptions[prop] = options[prop] || this.defaultOptions[prop]
+		})
+	}
+
+	constructor(el, options = this.defaultOptions) {
+		if (typeof(options) != "object") {
+			this.log("options must be an Object")
+		}
+
+		this.updateOptions(options)
+
+		this.log(this.defaultOptions);
+
+		this.shuffleContainer = document.querySelector(el)
+
+		this.shuffleContent = this.shuffleContainer.querySelector(this.defaultOptions.content)
+
+		this.shuffleContentItem = this.shuffleContent.querySelectorAll(this.defaultOptions.shuffleItems)
+
+		this.shuffleControls = this.shuffleContainer.querySelector(this.defaultOptions.controls)
+
+		this.shuffleControlItem = this.shuffleControls.querySelectorAll(this.defaultOptions.controlItems)
+
+		this.shufflingByClick();
+
+		this.log(this.defaultOptions);
+
+	}
+
+	hideAll() {
+		this.shuffleContentItem.forEach((sci) => {
+			sci.classList.add(this.hideClass)
+		})
+	}
+
+	showAll() {
+		this.shuffleContentItem.forEach((sci) => {
+			sci.classList.remove(this.hideClass)
+		})
+	}
+
+
+	shufflingByClick() {
+		const shufflesElements = this.shuffleContentItem
+		this.shuffleControlItem.forEach(btn => {
+			const btnAttr = btn.getAttribute('data-btn')
+			btn.onclick = () => {
+				if (btnAttr == "all" || btnAttr == null) {
+					this.showAll()
+				} else {
+					shufflesElements.forEach((sElem) => {
+						const sElemAttr = sElem.getAttribute('data-cat')
+						if (sElemAttr == btnAttr) {
+							this.hideAll()
+							sElem.classList.remove(this.hideClass)
+						}
+					})
+				}
+			};
+		});
+	}
+
+	log(msg) {
+		console.log(msg);
+	}
+
+}
+
+new Shuffle('.shuffle-kech', {
+	controls: '.shuffle-controls',
+});
+
+</script>
+</body>
+</html>
